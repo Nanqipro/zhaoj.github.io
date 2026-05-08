@@ -1,0 +1,1294 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>赵劲 | Java 后端开发</title>
+  <meta name="description" content="赵劲，南昌大学计算机技术硕士，专注 Java 后端开发、AI 工程化、高并发系统设计。" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0d1117;
+      --bg2: #161b22;
+      --bg3: #1c2128;
+      --border: #30363d;
+      --accent: #2f81f7;
+      --accent2: #58a6ff;
+      --accent3: #3fb950;
+      --gold: #e3b341;
+      --purple: #a371f7;
+      --pink: #f78166;
+      --text: #e6edf3;
+      --text2: #8b949e;
+      --text3: #c9d1d9;
+      --radius: 12px;
+      --shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', system-ui, sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 100;
+      background: rgba(13,17,23,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-logo {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 500;
+      color: var(--accent2);
+      font-size: 1.1rem;
+      text-decoration: none;
+    }
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      list-style: none;
+    }
+    .nav-links a {
+      color: var(--text2);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 60% 40%, rgba(47,129,247,0.12) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 60% at 20% 70%, rgba(163,113,247,0.08) 0%, transparent 60%);
+    }
+    .hero-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(48,54,61,0.3) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(48,54,61,0.3) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+    }
+    .hero-content {
+      position: relative;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 120px 24px 80px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 60px;
+      align-items: center;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(63,185,80,0.1);
+      border: 1px solid rgba(63,185,80,0.3);
+      border-radius: 100px;
+      padding: 4px 14px;
+      font-size: 0.8rem;
+      color: var(--accent3);
+      margin-bottom: 20px;
+    }
+    .hero-badge::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      background: var(--accent3);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%,100% { opacity:1; transform:scale(1); }
+      50% { opacity:.5; transform:scale(1.3); }
+    }
+    .hero-name {
+      font-size: clamp(2.8rem, 6vw, 4.5rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin-bottom: 12px;
+    }
+    .hero-name span { color: var(--accent2); }
+    .hero-title {
+      font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+      color: var(--text2);
+      margin-bottom: 24px;
+    }
+    .hero-title strong { color: var(--accent); }
+    .hero-desc {
+      color: var(--text3);
+      font-size: 1rem;
+      max-width: 540px;
+      margin-bottom: 36px;
+      line-height: 1.8;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 24px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all .2s;
+      cursor: pointer;
+      border: none;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+    .btn-primary:hover { background: #388bfd; transform: translateY(-1px); box-shadow: 0 4px 20px rgba(47,129,247,0.4); }
+    .btn-secondary {
+      background: var(--bg2);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover { border-color: var(--accent2); color: var(--accent2); transform: translateY(-1px); }
+    .hero-info {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 32px;
+    }
+    .hero-info-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text2);
+      font-size: 0.88rem;
+    }
+    .hero-info-item .icon { font-size: 1rem; }
+
+    /* Profile card */
+    .profile-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px 28px;
+      min-width: 240px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      box-shadow: var(--shadow);
+    }
+    .avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--purple) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.6rem;
+      font-weight: 700;
+      color: #fff;
+      border: 3px solid var(--border);
+    }
+    .profile-name { font-size: 1.3rem; font-weight: 600; }
+    .profile-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: center;
+    }
+    .tag {
+      font-size: 0.75rem;
+      padding: 3px 10px;
+      border-radius: 100px;
+      background: rgba(47,129,247,0.1);
+      border: 1px solid rgba(47,129,247,0.25);
+      color: var(--accent2);
+    }
+    .tag.green { background: rgba(63,185,80,0.1); border-color: rgba(63,185,80,0.25); color: var(--accent3); }
+    .tag.purple { background: rgba(163,113,247,0.1); border-color: rgba(163,113,247,0.25); color: var(--purple); }
+    .tag.gold { background: rgba(227,179,65,0.1); border-color: rgba(227,179,65,0.25); color: var(--gold); }
+    .profile-stats {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .stat-box {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px;
+      text-align: center;
+    }
+    .stat-num { font-size: 1.3rem; font-weight: 700; color: var(--accent2); font-family: 'JetBrains Mono', monospace; }
+    .stat-label { font-size: 0.7rem; color: var(--text2); margin-top: 2px; }
+
+    /* ── SECTION COMMONS ── */
+    section { padding: 80px 24px; }
+    .container { max-width: 1100px; margin: 0 auto; }
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 48px;
+    }
+    .section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    .section-title {
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .section-line {
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── HIGHLIGHTS ── */
+    #highlights { background: var(--bg2); }
+    .highlights-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+    }
+    .hl-card {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: border-color .2s, transform .2s;
+    }
+    .hl-card:hover { border-color: var(--accent); transform: translateY(-3px); }
+    .hl-icon { font-size: 2rem; }
+    .hl-num { font-size: 1.8rem; font-weight: 700; font-family: 'JetBrains Mono', monospace; color: var(--accent2); }
+    .hl-desc { font-size: 0.88rem; color: var(--text2); line-height: 1.6; }
+
+    /* ── SKILLS ── */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    .skill-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      transition: border-color .2s;
+    }
+    .skill-card:hover { border-color: var(--border); }
+    .skill-category {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+    .skill-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .skill-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+    .skill-tag {
+      font-size: 0.8rem;
+      padding: 4px 12px;
+      border-radius: 6px;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      color: var(--text3);
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .skill-tag.hot {
+      background: rgba(47,129,247,0.1);
+      border-color: rgba(47,129,247,0.3);
+      color: var(--accent2);
+    }
+
+    /* ── EXPERIENCE ── */
+    #experience { background: var(--bg2); }
+    .exp-card {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+      position: relative;
+      overflow: hidden;
+    }
+    .exp-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: linear-gradient(180deg, var(--accent) 0%, var(--purple) 100%);
+    }
+    .exp-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .exp-company { font-size: 1.2rem; font-weight: 700; color: var(--text); }
+    .exp-role { color: var(--accent2); font-size: 0.9rem; margin-top: 4px; }
+    .exp-date {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text2);
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      padding: 4px 12px;
+      border-radius: 6px;
+    }
+    .exp-tech {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+    .tech-badge {
+      font-size: 0.75rem;
+      padding: 3px 10px;
+      border-radius: 6px;
+      background: rgba(163,113,247,0.1);
+      border: 1px solid rgba(163,113,247,0.25);
+      color: var(--purple);
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .exp-items { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .exp-items li {
+      display: flex;
+      gap: 12px;
+      color: var(--text3);
+      font-size: 0.9rem;
+      line-height: 1.7;
+    }
+    .exp-items li::before {
+      content: '▸';
+      color: var(--accent);
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .exp-items li strong { color: var(--text); }
+    .wow-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 20px;
+      padding: 8px 18px;
+      background: linear-gradient(135deg, rgba(63,185,80,0.15), rgba(47,129,247,0.15));
+      border: 1px solid rgba(63,185,80,0.3);
+      border-radius: 8px;
+      color: var(--accent3);
+      font-size: 0.85rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all .2s;
+    }
+    .wow-link:hover { border-color: var(--accent3); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(63,185,80,0.2); }
+
+    /* ── PROJECTS ── */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
+      gap: 24px;
+    }
+    .proj-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      transition: border-color .2s, transform .2s;
+    }
+    .proj-card:hover { border-color: var(--accent); transform: translateY(-3px); }
+    .proj-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .proj-name { font-size: 1.05rem; font-weight: 700; color: var(--text); }
+    .proj-live {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.75rem;
+      padding: 3px 10px;
+      border-radius: 100px;
+      background: rgba(63,185,80,0.1);
+      border: 1px solid rgba(63,185,80,0.3);
+      color: var(--accent3);
+      text-decoration: none;
+      white-space: nowrap;
+      flex-shrink: 0;
+      transition: all .2s;
+    }
+    .proj-live:hover { background: rgba(63,185,80,0.2); }
+    .proj-live::before { content: '●'; font-size: 0.6rem; animation: pulse 2s infinite; }
+    .proj-date {
+      font-size: 0.75rem;
+      color: var(--text2);
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .proj-desc { color: var(--text3); font-size: 0.88rem; line-height: 1.7; }
+    .proj-metrics {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .metric {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.82rem;
+      padding: 5px 12px;
+      border-radius: 6px;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+    }
+    .metric.good { border-color: rgba(63,185,80,0.3); color: var(--accent3); background: rgba(63,185,80,0.05); }
+    .metric.blue { border-color: rgba(47,129,247,0.3); color: var(--accent2); background: rgba(47,129,247,0.05); }
+    .metric.gold { border-color: rgba(227,179,65,0.3); color: var(--gold); background: rgba(227,179,65,0.05); }
+    .proj-stack { display: flex; flex-wrap: wrap; gap: 6px; }
+    .stack-tag {
+      font-size: 0.75rem;
+      padding: 3px 9px;
+      border-radius: 5px;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      color: var(--text2);
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .proj-points { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .proj-points li {
+      display: flex;
+      gap: 10px;
+      color: var(--text3);
+      font-size: 0.85rem;
+      line-height: 1.7;
+    }
+    .proj-points li::before {
+      content: '→';
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+    .proj-points li strong { color: var(--text); }
+
+    /* ── AWARDS ── */
+    #awards { background: var(--bg2); }
+    .awards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+    }
+    .award-card {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      transition: border-color .2s, transform .2s;
+    }
+    .award-card:hover { border-color: var(--gold); transform: translateY(-2px); }
+    .award-medal { font-size: 2rem; flex-shrink: 0; }
+    .award-title { font-weight: 600; font-size: 0.92rem; line-height: 1.5; }
+    .award-meta { color: var(--text2); font-size: 0.8rem; margin-top: 4px; }
+    .award-meta span {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1px 7px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+    }
+
+    /* ── GOODLAB ── */
+    #lab { position: relative; overflow: hidden; }
+    .lab-bg {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 60% 80% at 80% 50%, rgba(163,113,247,0.08) 0%, transparent 70%);
+    }
+    .lab-card {
+      position: relative;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 40px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 40px;
+      align-items: center;
+    }
+    .lab-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(163,113,247,0.1);
+      border: 1px solid rgba(163,113,247,0.3);
+      border-radius: 100px;
+      padding: 4px 14px;
+      font-size: 0.8rem;
+      color: var(--purple);
+      margin-bottom: 16px;
+    }
+    .lab-name { font-size: 1.8rem; font-weight: 700; margin-bottom: 8px; }
+    .lab-en { color: var(--text2); font-size: 1rem; margin-bottom: 20px; }
+    .lab-desc { color: var(--text3); font-size: 0.92rem; line-height: 1.8; max-width: 540px; margin-bottom: 24px; }
+    .lab-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 28px;
+      background: linear-gradient(135deg, rgba(163,113,247,0.2), rgba(47,129,247,0.2));
+      border: 1px solid rgba(163,113,247,0.4);
+      border-radius: 8px;
+      color: var(--purple);
+      font-size: 0.9rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all .2s;
+    }
+    .lab-link:hover { border-color: var(--purple); transform: translateY(-1px); box-shadow: 0 4px 20px rgba(163,113,247,0.2); }
+    .lab-logo-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+    .lab-logo {
+      width: 120px;
+      height: 120px;
+      border-radius: var(--radius);
+      background: linear-gradient(135deg, rgba(163,113,247,0.2), rgba(47,129,247,0.2));
+      border: 1px solid rgba(163,113,247,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3.5rem;
+    }
+    .lab-school { font-size: 0.8rem; color: var(--text2); text-align: center; }
+
+    /* ── EDUCATION ── */
+    .edu-grid { display: flex; flex-direction: column; gap: 16px; }
+    .edu-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px 28px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 20px;
+      align-items: center;
+      transition: border-color .2s;
+    }
+    .edu-card:hover { border-color: var(--accent2); }
+    .edu-icon { font-size: 2.4rem; }
+    .edu-school { font-size: 1.1rem; font-weight: 700; }
+    .edu-degree { color: var(--accent2); font-size: 0.88rem; margin-top: 3px; }
+    .edu-awards { color: var(--text2); font-size: 0.82rem; margin-top: 6px; display: flex; flex-wrap: wrap; gap: 6px; }
+    .edu-pill {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 2px 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--gold);
+      border-color: rgba(227,179,65,0.3);
+    }
+    .edu-date { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--text2); white-space: nowrap; }
+
+    /* ── CONTACT / FOOTER ── */
+    #contact {
+      background: var(--bg2);
+      border-top: 1px solid var(--border);
+    }
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+    .contact-card {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-decoration: none;
+      color: var(--text);
+      transition: all .2s;
+    }
+    .contact-card:hover { border-color: var(--accent2); transform: translateY(-2px); }
+    .contact-icon { font-size: 1.6rem; }
+    .contact-label { font-size: 0.75rem; color: var(--text2); }
+    .contact-value { font-size: 0.9rem; font-weight: 500; color: var(--text3); }
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: var(--text2);
+      font-size: 0.82rem;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--text2); }
+
+    /* ── MOBILE ── */
+    @media (max-width: 768px) {
+      .hero-content { grid-template-columns: 1fr; }
+      .profile-card { display: none; }
+      .lab-card { grid-template-columns: 1fr; }
+      .lab-logo-wrap { display: none; }
+      .projects-grid { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+      .edu-card { grid-template-columns: auto 1fr; }
+      .edu-date { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <div class="nav-inner">
+    <a href="#hero" class="nav-logo">赵劲 · ZhaoJin</a>
+    <ul class="nav-links">
+      <li><a href="#highlights">亮点</a></li>
+      <li><a href="#skills">技能</a></li>
+      <li><a href="#experience">实习</a></li>
+      <li><a href="#projects">项目</a></li>
+      <li><a href="#awards">荣誉</a></li>
+      <li><a href="#lab">实验室</a></li>
+      <li><a href="#contact">联系</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div>
+      <div class="hero-badge">正在寻找 Java 后端开发岗位</div>
+      <h1 class="hero-name">赵 <span>劲</span></h1>
+      <p class="hero-title">
+        <strong>Java 后端开发</strong> · AI 工程化 · 高并发系统设计
+      </p>
+      <p class="hero-desc">
+        南昌大学计算机技术硕士在读（211 双一流），专业成绩<strong style="color:var(--gold)">排名 1/54</strong>。
+        熟悉 Java 并发、JVM、Spring Boot 3、MySQL、Redis 等后端核心技术栈，深入实践
+        <strong style="color:var(--accent2)">Spring AI + MCP 协议 + RAG 架构</strong>，
+        具备 AI 工程化能力与高并发场景实战经验。
+      </p>
+      <div class="hero-actions">
+        <a href="https://github.com/Nanqipro" target="_blank" class="btn btn-primary">
+          ⭐ GitHub 主页
+        </a>
+        <a href="mailto:zhaoj@email.ncu.edu.cn" class="btn btn-secondary">
+          ✉ 发送邮件
+        </a>
+        <a href="#contact" class="btn btn-secondary">
+          📱 联系我
+        </a>
+      </div>
+      <div class="hero-info">
+        <div class="hero-info-item"><span class="icon">🏫</span> 南昌大学 · 计算机技术硕士 2024–2027</div>
+        <div class="hero-info-item"><span class="icon">📍</span> 江西 南昌 · 可赴京/沪/杭等地</div>
+        <div class="hero-info-item"><span class="icon">🎖</span> 中共党员 · 党支部组织委员</div>
+      </div>
+    </div>
+    <div class="profile-card">
+      <div class="avatar">赵</div>
+      <div class="profile-name">赵 劲</div>
+      <div class="profile-tags">
+        <span class="tag">Java 后端</span>
+        <span class="tag green">AI 工程化</span>
+        <span class="tag purple">Spring AI</span>
+        <span class="tag gold">全栈交付</span>
+      </div>
+      <div class="profile-stats">
+        <div class="stat-box">
+          <div class="stat-num">1/54</div>
+          <div class="stat-label">专业排名</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num">3</div>
+          <div class="stat-label">发明专利</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num">3K</div>
+          <div class="stat-label">QPS 峰值</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num">60%+</div>
+          <div class="stat-label">效率提升</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── HIGHLIGHTS ── -->
+<section id="highlights">
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <div class="section-label">// highlights</div>
+        <h2 class="section-title">核心亮点</h2>
+      </div>
+      <div class="section-line"></div>
+    </div>
+    <div class="highlights-grid">
+      <div class="hl-card">
+        <div class="hl-icon">🏆</div>
+        <div class="hl-num">全国一等奖</div>
+        <div class="hl-desc">华为开发者大赛全国一等奖（全国前16强），担任队长；另获研究生数学建模全国二等奖。</div>
+      </div>
+      <div class="hl-card">
+        <div class="hl-icon">📚</div>
+        <div class="hl-num">1 / 54</div>
+        <div class="hl-desc">南昌大学计算机技术硕士专业成绩排名第一，考研成绩 379 分（全院第 4）。</div>
+      </div>
+      <div class="hl-card">
+        <div class="hl-icon">🤖</div>
+        <div class="hl-num">AI 全栈</div>
+        <div class="hl-desc">深度掌握 Spring AI + MCP 协议 + RAG 架构，主导上线真实 AI 设备预约平台，已服务科研人员。</div>
+      </div>
+      <div class="hl-card">
+        <div class="hl-icon">⚡</div>
+        <div class="hl-num">3000 QPS</div>
+        <div class="hl-desc">三层防超卖机制（Redis + SetNX + MySQL 乐观锁），wrk 压测 3000 QPS 下库存准确率 100%。</div>
+      </div>
+      <div class="hl-card">
+        <div class="hl-icon">🔬</div>
+        <div class="hl-num">3 项专利</div>
+        <div class="hl-desc">已授权发明专利 3 项，其中 1 项学生一作，展现扎实的研究与工程转化能力。</div>
+      </div>
+      <div class="hl-card">
+        <div class="hl-icon">🌐</div>
+        <div class="hl-num">已上线</div>
+        <div class="hl-desc">主导开发的 AI 设备预约平台已部署上线（iimigx.ncu.edu.cn），服务国际材料创新研究院科研人员。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SKILLS ── -->
+<section id="skills">
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <div class="section-label">// tech stack</div>
+        <h2 class="section-title">技术栈</h2>
+      </div>
+      <div class="section-line"></div>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-card">
+        <div class="skill-category">
+          <div class="skill-dot" style="background:#2f81f7"></div>
+          Java 核心 & 并发
+        </div>
+        <div class="skill-tags">
+          <span class="skill-tag hot">Java 21</span>
+          <span class="skill-tag hot">JUC</span>
+          <span class="skill-tag">线程池</span>
+          <span class="skill-tag">ReentrantLock</span>
+          <span class="skill-tag">CAS / AQS</span>
+          <span class="skill-tag">synchronized</span>
+          <span class="skill-tag">HashMap原理</span>
+          <span class="skill-tag">JVM 内存模型</span>
+          <span class="skill-tag">G1 / CMS</span>
+          <span class="skill-tag">双亲委派</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-category">
+          <div class="skill-dot" style="background:#3fb950"></div>
+          框架 & 中间件
+        </div>
+        <div class="skill-tags">
+          <span class="skill-tag hot">Spring Boot 3</span>
+          <span class="skill-tag hot">Spring MVC</span>
+          <span class="skill-tag">AOP</span>
+          <span class="skill-tag">三级缓存</span>
+          <span class="skill-tag">RabbitMQ</span>
+          <span class="skill-tag">Redis</span>
+          <span class="skill-tag">Redisson</span>
+          <span class="skill-tag">SpringDoc</span>
+          <span class="skill-tag">Docker</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-category">
+          <div class="skill-dot" style="background:#a371f7"></div>
+          AI 工程化 🔥
+        </div>
+        <div class="skill-tags">
+          <span class="skill-tag hot">Spring AI</span>
+          <span class="skill-tag hot">MCP 协议</span>
+          <span class="skill-tag hot">RAG 架构</span>
+          <span class="skill-tag">pgvector</span>
+          <span class="skill-tag">Embedding</span>
+          <span class="skill-tag">SSE 流式</span>
+          <span class="skill-tag">Agent ReAct</span>
+          <span class="skill-tag">Prompt 工程</span>
+          <span class="skill-tag">DeepSeek</span>
+          <span class="skill-tag">Ollama</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-category">
+          <div class="skill-dot" style="background:#e3b341"></div>
+          数据库 & 存储
+        </div>
+        <div class="skill-tags">
+          <span class="skill-tag hot">MySQL 8</span>
+          <span class="skill-tag">B+ 树索引</span>
+          <span class="skill-tag">MVCC</span>
+          <span class="skill-tag">事务 ACID</span>
+          <span class="skill-tag">索引下推</span>
+          <span class="skill-tag">Redis BitMap</span>
+          <span class="skill-tag">缓存三件套</span>
+          <span class="skill-tag">主从 / 哨兵</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-category">
+          <div class="skill-dot" style="background:#f78166"></div>
+          架构 & 设计
+        </div>
+        <div class="skill-tags">
+          <span class="skill-tag hot">DDD 分层</span>
+          <span class="skill-tag">责任链</span>
+          <span class="skill-tag">策略模式</span>
+          <span class="skill-tag">模板方法</span>
+          <span class="skill-tag">工厂 / 单例</span>
+          <span class="skill-tag">CAP / BASE</span>
+          <span class="skill-tag">分布式事务</span>
+          <span class="skill-tag">防超卖</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-category">
+          <div class="skill-dot" style="background:#58a6ff"></div>
+          工程化 & 工具
+        </div>
+        <div class="skill-tags">
+          <span class="skill-tag hot">Claude Code</span>
+          <span class="skill-tag">Linux Shell</span>
+          <span class="skill-tag">Git</span>
+          <span class="skill-tag">Docker</span>
+          <span class="skill-tag">wrk 压测</span>
+          <span class="skill-tag">Python</span>
+          <span class="skill-tag">Gemini</span>
+          <span class="skill-tag">前后端联调</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── EXPERIENCE ── -->
+<section id="experience">
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <div class="section-label">// internship</div>
+        <h2 class="section-title">实习经历</h2>
+      </div>
+      <div class="section-line"></div>
+    </div>
+    <div class="exp-card">
+      <div class="exp-header">
+        <div>
+          <div class="exp-company">北京云阙智能科技有限公司</div>
+          <div class="exp-role">Java 后端开发实习生 · 北京</div>
+        </div>
+        <div class="exp-date">2025.06 — 2025.09</div>
+      </div>
+      <div class="exp-tech">
+        <span class="tech-badge">Java 21</span>
+        <span class="tech-badge">Spring Boot 3</span>
+        <span class="tech-badge">Spring AI</span>
+        <span class="tech-badge">Redis</span>
+        <span class="tech-badge">RabbitMQ</span>
+        <span class="tech-badge">MySQL 8</span>
+        <span class="tech-badge">SpringDoc OpenAPI</span>
+        <span class="tech-badge">Flutter</span>
+        <span class="tech-badge">Python Celery</span>
+      </div>
+      <p style="color:var(--text3);font-size:0.9rem;line-height:1.8;margin-bottom:16px;">
+        参与「<strong style="color:var(--text)">WOW Talk</strong>」AI 英语学习 App 后端开发，
+        产品覆盖听力、口语、阅读、写作纠错、单词记忆五大模块，
+        内测阶段目标 <strong style="color:var(--gold)">DAU 10,000+</strong>。
+        在核心 API 团队中协助完成写作纠错、单词记忆模块接口开发。
+      </p>
+      <ul class="exp-items">
+        <li>
+          <strong>RESTful 接口开发：</strong>参与写作纠错、单词记忆模块 Spring Web MVC 接口开发，涵盖作文提交、纠错记录查询、学习进度同步场景，基于 SpringDoc OpenAPI 生成 Swagger 3 交互式接口文档，配合 Flutter 客户端完成接口联调与 Bug 修复。
+        </li>
+        <li>
+          <strong>Spring AI 轻量 AI 封装：</strong>基于 Spring AI 对接大模型 API，协助实现单词例句生成、同义句改写等轻量 AI 接口，设计 Prompt 模板并迭代优化输出格式稳定性；重任务（整篇作文纠错、发音评测）通过 RabbitMQ 交由 Python Celery 异步处理，解耦 AI 计算瓶颈。
+        </li>
+        <li>
+          <strong>Redis 缓存引入：</strong>对单词释义、高频词库等读多写少场景使用 <code style="background:var(--bg);padding:1px 5px;border-radius:3px;font-size:0.8rem;">@Cacheable</code> 注解引入 Redis 缓存，合理设置 TTL 与 key 命名空间，有效减轻 MySQL 读压力。
+        </li>
+      </ul>
+      <a href="http://47.99.184.230:8008/app-release.apk.260104" class="wow-link" target="_blank">
+        📱 下载 WOW Talk APP（Android）
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ── PROJECTS ── -->
+<section id="projects">
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <div class="section-label">// projects</div>
+        <h2 class="section-title">项目经历</h2>
+      </div>
+      <div class="section-line"></div>
+    </div>
+    <div class="projects-grid">
+
+      <!-- Project 1 -->
+      <div class="proj-card">
+        <div class="proj-header">
+          <div>
+            <div class="proj-name">南昌大学国际材料创新研究院<br>AI+ 智能设备预约平台</div>
+            <div class="proj-date">2025.10 — 2025.12 · 项目负责人 · GOODLAB 实验室</div>
+          </div>
+          <a href="https://iimigx.ncu.edu.cn" target="_blank" class="proj-live">已上线</a>
+        </div>
+        <div class="proj-metrics">
+          <div class="metric good">⚡ 预约效率提升 60%+</div>
+          <div class="metric blue">🎯 Top-K 检索准确率 90%+</div>
+          <div class="metric gold">⏱ TTFT &lt; 300ms</div>
+          <div class="metric good">📉 响应 RT ~1.2s → ~200ms</div>
+        </div>
+        <p class="proj-desc">
+          面向跨学科科研人员的 AI+ 设备预约平台，以 MCP 协议为核心架构，本地化部署
+          DeepSeek-32B 作为 Host 统一调度，实现<strong style="color:var(--text)">自然语言意图识别 → 智能设备匹配 → 自动预约</strong>全链路闭环。
+        </p>
+        <ul class="proj-points">
+          <li><strong>MCP 分层架构：</strong>将平台能力拆解为设备查询、预约调度、知识库三个独立 MCP Server，新增业务只需扩展 Server，无需改动 AI 核心逻辑。</li>
+          <li><strong>@Tool 声明式开发：</strong>基于 @Tool 注解将业务方法声明为 MCP Tool，框架自动生成 JSON Schema 并注册；设备手册通过 MCP Resources 按需拉取，Token 开销降低约 25%。</li>
+          <li><strong>RAG 知识库 + pgvector：</strong>Chunking 策略结构化处理仪器手册，Embedding 向量化后存入 pgvector，Top-K 检索准确率 90%+。</li>
+          <li><strong>本地化部署：</strong>基于 Ollama 在 4×Tesla V100S 32GB GPU 集群部署 DeepSeek-32B，Few-shot 模板提升意图识别准确性，SSE 流式首字延迟 &lt; 300ms。</li>
+          <li><strong>多级缓存：</strong>Redis 缓存热点设备查询与常见问答，高频查询响应 RT 从 ~1.2s 降至 ~200ms。</li>
+        </ul>
+        <div class="proj-stack">
+          <span class="stack-tag">Spring AI</span>
+          <span class="stack-tag">MCP 协议</span>
+          <span class="stack-tag">DeepSeek-32B</span>
+          <span class="stack-tag">Ollama</span>
+          <span class="stack-tag">RAG</span>
+          <span class="stack-tag">pgvector</span>
+          <span class="stack-tag">SSE</span>
+          <span class="stack-tag">Redis</span>
+        </div>
+      </div>
+
+      <!-- Project 2 -->
+      <div class="proj-card">
+        <div class="proj-header">
+          <div>
+            <div class="proj-name">虚拟商品电商平台<br>营销活动子系统（拼团场景）</div>
+            <div class="proj-date">2026.01 — 2026.03 · 后端开发 · 南昌</div>
+          </div>
+        </div>
+        <div class="proj-metrics">
+          <div class="metric gold">🔥 支撑 3000 QPS 峰值</div>
+          <div class="metric good">✅ 零超卖，库存准确率 100%</div>
+          <div class="metric blue">⚡ 试算接口 P99 &lt; 100ms</div>
+          <div class="metric good">📦 1 亿用户仅 12MB BitMap</div>
+        </div>
+        <p class="proj-desc">
+          虚拟商品（会员卡、话费券）电商平台营销活动子系统，承接大促期间高并发拼团下单、库存扣减、结算/退款全链路业务，要求业务规则可热更新、防超卖，支撑 <strong style="color:var(--text)">3000 QPS 峰值流量</strong>。
+        </p>
+        <ul class="proj-points">
+          <li><strong>DDD 分层架构：</strong>按活动、交易、标签三大领域拆分，严格隔离五层，新增营销玩法仅需扩展 Domain 层策略类，平均改动文件数从 ~8 个降至 2~3 个。</li>
+          <li><strong>三层防超卖：</strong>Redis INCR 原子 CAS + SetNX 兜底锁 + MySQL 乐观锁，辅以失败恢复计数器，wrk 压测 3000 QPS 下库存准确率 100%、零超卖。</li>
+          <li><strong>责任链规则引擎：</strong>锁单/结算/退款前置校验拆分为独立责任链节点，上下文透传避免重复查库，新增规则只需添加节点类，符合开闭原则。</li>
+          <li><strong>决策树 + 并发预加载：</strong>模板方法 + 策略路由构建多分支决策树，线程池并发预加载配置与商品数据，试算接口 RT 从 ~200ms 降至最慢单查 ~60ms。</li>
+          <li><strong>Redis BitMap 人群标签：</strong>1 亿用户数据仅需约 12MB，O(1) 复杂度毫秒级完成人群资格判定。</li>
+        </ul>
+        <div class="proj-stack">
+          <span class="stack-tag">DDD</span>
+          <span class="stack-tag">MySQL</span>
+          <span class="stack-tag">Redis</span>
+          <span class="stack-tag">RabbitMQ</span>
+          <span class="stack-tag">Docker</span>
+          <span class="stack-tag">wrk 压测</span>
+          <span class="stack-tag">责任链</span>
+          <span class="stack-tag">BitMap</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── AWARDS ── -->
+<section id="awards">
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <div class="section-label">// honors & awards</div>
+        <h2 class="section-title">荣誉奖项</h2>
+      </div>
+      <div class="section-line"></div>
+    </div>
+    <div class="awards-grid">
+      <div class="award-card">
+        <div class="award-medal">🥇</div>
+        <div>
+          <div class="award-title">华为开发者大赛 · 全国一等奖（全国前16强）</div>
+          <div class="award-meta">担任队长 &nbsp;<span>2024</span></div>
+        </div>
+      </div>
+      <div class="award-card">
+        <div class="award-medal">🥈</div>
+        <div>
+          <div class="award-title">"华为杯"中国研究生数学建模竞赛 · 全国二等奖</div>
+          <div class="award-meta">队长 & 核心代码手 &nbsp;<span>2024</span></div>
+        </div>
+      </div>
+      <div class="award-card">
+        <div class="award-medal">🥉</div>
+        <div>
+          <div class="award-title">华为软件精英挑战赛杭厦赛区 · 三等奖</div>
+          <div class="award-meta">担任队长 &nbsp;<span>2025</span></div>
+        </div>
+      </div>
+      <div class="award-card">
+        <div class="award-medal">📜</div>
+        <div>
+          <div class="award-title">已授权发明专利 3 项（1项学生一作）</div>
+          <div class="award-meta"><span>2024</span> <span>2025</span></div>
+        </div>
+      </div>
+      <div class="award-card">
+        <div class="award-medal">🎓</div>
+        <div>
+          <div class="award-title">南昌大学一等学业奖学金 & 特等学业奖学金</div>
+          <div class="award-meta"><span>2024</span> <span>2025</span></div>
+        </div>
+      </div>
+      <div class="award-card">
+        <div class="award-medal">⭐</div>
+        <div>
+          <div class="award-title">数学与计算机学院"榜样之星" × 2</div>
+          <div class="award-meta"><span>2024</span> <span>2025</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── EDUCATION ── -->
+<section id="education">
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <div class="section-label">// education</div>
+        <h2 class="section-title">教育经历</h2>
+      </div>
+      <div class="section-line"></div>
+    </div>
+    <div class="edu-grid">
+      <div class="edu-card">
+        <div class="edu-icon">🎓</div>
+        <div>
+          <div class="edu-school">南昌大学 &nbsp;<span style="font-size:0.8rem;color:var(--accent2);background:rgba(47,129,247,0.1);border:1px solid rgba(47,129,247,0.3);border-radius:4px;padding:2px 8px;">211 · 双一流</span></div>
+          <div class="edu-degree">计算机技术 · 硕士 · 数学与计算机学院</div>
+          <div class="edu-awards">
+            <span class="edu-pill">专业排名 1/54</span>
+            <span class="edu-pill">考研379分（排名4/110）</span>
+            <span class="edu-pill">党支部组织委员</span>
+            <span class="edu-pill">特等学业奖学金</span>
+          </div>
+        </div>
+        <div class="edu-date">2024.09 – 2027.06</div>
+      </div>
+      <div class="edu-card">
+        <div class="edu-icon">🏫</div>
+        <div>
+          <div class="edu-school">北京物资学院</div>
+          <div class="edu-degree">信息管理与信息系统 · 本科 · 信息学院</div>
+          <div class="edu-awards">
+            <span class="edu-pill">成绩排名前 10%</span>
+            <span class="edu-pill">学生党支部支委</span>
+          </div>
+        </div>
+        <div class="edu-date">2019.09 – 2023.06</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── GOODLAB ── -->
+<section id="lab">
+  <div class="lab-bg"></div>
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <div class="section-label">// laboratory</div>
+        <h2 class="section-title">所在实验室</h2>
+      </div>
+      <div class="section-line"></div>
+    </div>
+    <div class="lab-card">
+      <div>
+        <div class="lab-badge">🔬 南昌大学 · 数学与计算机学院</div>
+        <div class="lab-name">GOODLAB</div>
+        <div class="lab-en">泛在数据分析与优化实验室</div>
+        <p class="lab-desc">
+          GOODLAB（泛在数据分析与优化实验室）隶属南昌大学数学与计算机学院，聚焦泛在计算环境下的数据分析、智能优化与 AI 工程化应用研究。
+          实验室承接多项国家级与省级科研项目，在大数据处理、机器学习系统、分布式智能等方向产出了丰富的学术成果与工程实践。
+          本人作为实验室成员，主导完成了面向科研场景的 AI+ 智能设备预约平台（已上线），
+          将 MCP 协议、RAG 架构与本地大模型部署融合落地，实现科研人员预约效率提升 60%+。
+        </p>
+        <a href="https://good.ncu.edu.cn/" target="_blank" class="lab-link">
+          🌐 访问 GOODLAB 官网
+        </a>
+      </div>
+      <div class="lab-logo-wrap">
+        <div class="lab-logo">🔬</div>
+        <div class="lab-school">南昌大学<br>数学与计算机学院</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CONTACT ── -->
+<section id="contact">
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <div class="section-label">// contact</div>
+        <h2 class="section-title">联系方式</h2>
+      </div>
+      <div class="section-line"></div>
+    </div>
+    <div class="contact-grid">
+      <a href="tel:18707958729" class="contact-card">
+        <div class="contact-icon">📱</div>
+        <div>
+          <div class="contact-label">手机 / 微信</div>
+          <div class="contact-value">187-0795-8729</div>
+        </div>
+      </a>
+      <a href="mailto:zhaoj@email.ncu.edu.cn" class="contact-card">
+        <div class="contact-icon">✉️</div>
+        <div>
+          <div class="contact-label">邮箱</div>
+          <div class="contact-value">zhaoj@email.ncu.edu.cn</div>
+        </div>
+      </a>
+      <a href="https://github.com/Nanqipro" target="_blank" class="contact-card">
+        <div class="contact-icon">💻</div>
+        <div>
+          <div class="contact-label">GitHub</div>
+          <div class="contact-value">github.com/Nanqipro</div>
+        </div>
+      </a>
+      <a href="https://good.ncu.edu.cn/" target="_blank" class="contact-card">
+        <div class="contact-icon">🔬</div>
+        <div>
+          <div class="contact-label">实验室官网</div>
+          <div class="contact-value">GOODLAB · 南昌大学</div>
+        </div>
+      </a>
+    </div>
+    <div style="text-align:center;padding:20px 0 0;">
+      <div style="color:var(--text2);font-size:0.9rem;margin-bottom:12px;">期待与您交流，随时欢迎联系 👋</div>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <span class="tag green">专业成绩 1/54</span>
+        <span class="tag">华为一等奖</span>
+        <span class="tag purple">AI 工程化</span>
+        <span class="tag gold">3 项专利</span>
+        <span class="tag">已上线项目</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 赵劲 · 南昌大学计算机技术硕士 · Java 后端开发 &nbsp;|&nbsp;
+    <a href="https://github.com/Nanqipro" target="_blank" style="color:var(--accent2);text-decoration:none;">GitHub</a>
+    &nbsp;·&nbsp;
+    <a href="https://good.ncu.edu.cn/" target="_blank" style="color:var(--purple);text-decoration:none;">GOODLAB</a>
+  </p>
+</footer>
+
+</body>
+</html>
